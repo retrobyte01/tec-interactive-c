@@ -2,7 +2,6 @@ import React from 'react';
 import { ArrowRight, BookOpen, Sparkles } from 'lucide-react';
 import { Aurora } from '../reactbits/Aurora';
 import { TechText } from '../reactbits/TechText';
-import { useTheme } from '../../context/ThemeContext';
 
 interface HeroSectionProps {
   onStartLearning: () => void;
@@ -13,22 +12,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onStartLearning,
   onExploreCurriculum
 }) => {
-  const { theme } = useTheme();
-
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center pt-28 pb-16 px-4 overflow-hidden">
       {/* Official React Bits Aurora Background (https://reactbits.dev/c/backgrounds/aurora) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <Aurora
-          colorStops={
-            theme === 'dark'
-              ? ['#3A29FF', '#FF94B4', '#FF3232']
-              : ['#5227FF', '#007AFF', '#7cff67']
-          }
+          colorStops={['#3A29FF', '#FF94B4', '#FF3232']}
           blend={0.5}
           amplitude={1.0}
           speed={0.8}
-          lightMode={theme === 'light'}
+          lightMode={false}
           className="w-full h-full opacity-80 dark:opacity-60"
         />
       </div>

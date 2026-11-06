@@ -10,10 +10,10 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Flame,
-  Terminal
+  Flame
 } from 'lucide-react';
 import { useProgress } from '../../context/ProgressContext';
+import { TecLogo } from '../common/TecLogo';
 
 interface SidebarProps {
   currentTab: string;
@@ -37,7 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'all-courses', label: 'All Courses', icon: BookOpen },
     { id: 'learning-path', label: 'Learning Path', icon: Milestone },
     { id: 'quizzes', label: 'Quizzes', icon: HelpCircle },
-    { id: 'practice', label: 'Practice (Sandbox)', icon: Code2 },
+    { id: 'sandbox', label: 'Practice (Sandbox)', icon: Code2 },
     { id: 'bookmarks', label: 'Bookmarks & Notes', icon: Bookmark },
     { id: 'progress', label: 'My Progress', icon: Award },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -58,15 +58,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
               collapsed ? 'justify-center w-full' : ''
             }`}
           >
-            <div className="w-8 h-8 rounded-xl bg-[#007AFF] flex items-center justify-center text-white shrink-0 shadow-sm">
-              <Terminal className="w-4 h-4 stroke-[2.5]" />
+            <div className="w-8 h-8 flex items-center justify-center shrink-0">
+              <TecLogo className="w-8 h-8" />
             </div>
             {!collapsed && (
               <div className="flex flex-col">
                 <span className="font-extrabold text-base tracking-tight text-[#171719] dark:text-[#F5F5F7]">
                   TEC
                 </span>
-                <span className="text-[10px] text-[#777780] dark:text-[#9898A0] font-medium -mt-0.5">
+                <span className="text-[10px] text-[#007AFF] font-semibold -mt-0.5">
                   Platform
                 </span>
               </div>
@@ -101,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <nav className="p-3 space-y-1">
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentTab === item.id;
+            const isActive = currentTab === item.id || (item.id === 'sandbox' && (currentTab === 'sandbox' || currentTab === 'practice'));
             return (
               <button
                 key={item.id}

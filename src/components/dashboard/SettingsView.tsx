@@ -1,10 +1,8 @@
 import React from 'react';
-import { Sun, Moon, Database, Info } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
+import { Moon, Database, Info, Check } from 'lucide-react';
 import { useProgress } from '../../context/ProgressContext';
 
 export const SettingsView: React.FC = () => {
-  const { theme, setTheme } = useTheme();
   const { progress } = useProgress();
 
   return (
@@ -21,36 +19,21 @@ export const SettingsView: React.FC = () => {
       {/* Appearance Section */}
       <div className="p-6 rounded-3xl bg-white/80 dark:bg-[#1C1C24]/80 backdrop-blur-xl border border-black/[0.06] dark:border-white/[0.08] shadow-apple-sm space-y-4">
         <h3 className="text-sm font-bold text-[#171719] dark:text-[#F5F5F7]">
-          Appearance & macOS Theme
+          Appearance & Aesthetic
         </h3>
         <p className="text-xs text-[#777780]">
-          Select between light and macOS-inspired dark surface themes.
+          TEC is exclusively engineered in Apple-grade macOS obsidian dark mode for high code readability and contrast.
         </p>
 
-        <div className="grid grid-cols-2 gap-4 max-w-sm pt-2">
-          <button
-            onClick={() => setTheme('light')}
-            className={`p-4 rounded-2xl border flex flex-col items-center justify-center space-y-2 transition-all ${
-              theme === 'light'
-                ? 'border-[#007AFF] bg-[#007AFF]/10 text-[#007AFF]'
-                : 'border-black/[0.06] dark:border-white/[0.08] text-[#777780]'
-            }`}
-          >
-            <Sun className="w-5 h-5" />
-            <span className="text-xs font-semibold">Light Mode</span>
-          </button>
-
-          <button
-            onClick={() => setTheme('dark')}
-            className={`p-4 rounded-2xl border flex flex-col items-center justify-center space-y-2 transition-all ${
-              theme === 'dark'
-                ? 'border-[#007AFF] bg-[#007AFF]/10 text-[#007AFF]'
-                : 'border-black/[0.06] dark:border-white/[0.08] text-[#777780]'
-            }`}
-          >
-            <Moon className="w-5 h-5" />
-            <span className="text-xs font-semibold">Dark Mode</span>
-          </button>
+        <div className="pt-2">
+          <div className="inline-flex items-center space-x-3 px-4 py-3 rounded-2xl border border-[#007AFF]/40 bg-[#007AFF]/10 text-[#007AFF]">
+            <Moon className="w-5 h-5 text-[#007AFF]" />
+            <div>
+              <div className="text-xs font-semibold text-[#F5F5F7]">macOS Dark Aesthetic</div>
+              <div className="text-[10px] text-[#777780]">Active • Optimized for code syntax highlighting & low eye strain</div>
+            </div>
+            <Check className="w-4 h-4 text-[#34C759] ml-2" />
+          </div>
         </div>
       </div>
 

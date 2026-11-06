@@ -30,6 +30,21 @@ export const AppContent: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  const isMac = typeof window !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator?.userAgent || '');
+  const shortcutLabel = isMac ? '⌘K' : 'Ctrl+K';
+
+  // Global Ctrl+K / Cmd+K listener optimized for Windows, Linux & macOS
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
+
   // Scroll to top on navigation change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -54,7 +69,7 @@ export const AppContent: React.FC = () => {
       return;
     }
 
-    if (view === 'sandbox') {
+    if (view === 'sandbox' || view === 'practice') {
       setCurrentView('sandbox');
       return;
     }
@@ -86,6 +101,8 @@ export const AppContent: React.FC = () => {
   };
 
   const activeLesson = getLessonById(activeLessonId) || ALL_LESSONS[0];
+
+
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFAFC] dark:bg-[#0D0D11] text-[#171719] dark:text-[#F5F5F7] transition-colors duration-300">
@@ -140,6 +157,8 @@ export const AppContent: React.FC = () => {
             onSelectTab={(tab) => {
               if (tab === 'quizzes') {
                 setActiveQuizModuleId(activeLesson.moduleId);
+              } else if (tab === 'practice' || tab === 'sandbox') {
+                setCurrentView('sandbox');
               } else {
                 setCurrentView(tab);
               }
@@ -168,11 +187,12 @@ export const AppContent: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="flex items-center space-x-2 text-xs px-3 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] text-[#777780] hover:text-[#171719] dark:hover:text-[#F5F5F7] transition-colors border border-black/[0.04] dark:border-white/[0.06]"
+                  className="flex items-center space-x-2 text-xs px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.1] text-[#9898A0] hover:text-[#F5F5F7] transition-colors border border-white/[0.06]"
+                  title={`Quick Find (${shortcutLabel})`}
                 >
                   <span>Quick Find</span>
-                  <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/[0.06] dark:bg-white/[0.1]">
-                    ⌘K
+                  <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.1] text-white">
+                    {shortcutLabel}
                   </kbd>
                 </button>
 
@@ -219,7 +239,7 @@ export const AppContent: React.FC = () => {
                 />
               )}
 
-              {currentView === 'sandbox' && (
+              {(currentView === 'sandbox' || currentView === 'practice') && (
                 <CodeSandbox
                   initialCode={sandboxCode}
                   selectedExerciseId={sandboxExerciseId}

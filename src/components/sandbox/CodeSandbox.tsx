@@ -6,7 +6,6 @@ import {
   AlertCircle,
   Clock,
   Eye,
-  Check,
   Terminal,
   FileCode,
   CornerDownLeft,
@@ -28,7 +27,7 @@ export const CodeSandbox: React.FC<CodeSandboxProps> = ({
   initialCode,
   selectedExerciseId = 'ex-01'
 }) => {
-  const { recordExerciseCompletion, progress } = useProgress();
+  const { recordExerciseCompletion } = useProgress();
 
   const [activeExercise, setActiveExercise] = useState<CodingExercise>(() => {
     return CODING_EXERCISES.find(e => e.id === selectedExerciseId) || CODING_EXERCISES[0];
@@ -162,27 +161,22 @@ export const CodeSandbox: React.FC<CodeSandboxProps> = ({
           </h1>
         </div>
 
-        {/* Exercise selector pills */}
-        <div className="flex items-center space-x-2 overflow-x-auto pb-1 max-w-full scrollbar-none">
-          {CODING_EXERCISES.map((ex, index) => {
-            const isCurrent = ex.id === activeExercise.id;
-            const exDone = progress.completedExerciseIds.includes(ex.id);
-            return (
-              <button
-                key={ex.id}
-                onClick={() => handleSelectExercise(ex)}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                  isCurrent
-                    ? 'bg-[#007AFF] text-white shadow-sm ring-2 ring-[#007AFF]/30'
-                    : 'bg-black/[0.04] dark:bg-white/[0.06] text-[#777780] hover:text-[#171719] dark:hover:text-white'
-                }`}
-              >
-                {exDone && <Check className="w-3 h-3 text-[#34C759]" />}
-                <span className="font-mono text-[10px] opacity-70">Ex {index + 1}:</span>
-                <span>{ex.title}</span>
-              </button>
-            );
-          })}
+        {/* Exercise Quick Switcher & Pills */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 max-w-xl">
+          <select
+            value={activeExercise.id}
+            onChange={(e) => {
+              const ex = CODING_EXERCISES.find(item => item.id === e.target.value);
+              if (ex) handleSelectExercise(ex);
+            }}
+            className="px-3 py-1.5 rounded-xl bg-[#1C1C24] text-xs font-semibold text-white border border-white/[0.1] outline-none cursor-pointer focus:border-[#007AFF] shadow-apple-sm"
+          >
+            {CODING_EXERCISES.map((ex, idx) => (
+              <option key={ex.id} value={ex.id} className="bg-[#1C1C24] text-white">
+                Ex {idx + 1}: {ex.title} (Ch {ex.chapterNumber})
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
