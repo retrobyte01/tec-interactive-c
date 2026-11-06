@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, Heart } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -20,8 +20,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-1">
-          <span>Designed with Apple aesthetics</span>
-          <Heart className="w-3.5 h-3.5 text-[#FF3B30] inline fill-current ml-1" />
+          <span>© 2026 TEC Platform</span>
         </div>
       </div>
     </footer>

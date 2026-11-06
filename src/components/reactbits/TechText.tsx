@@ -12,7 +12,7 @@ const GLYPHS = '01#@<>[]/\\=+$*~';
 export const TechText: React.FC<TechTextProps> = ({
   text,
   className = '',
-  scrambleSpeed = 45,
+  scrambleSpeed = 40,
   maxIterations = 14
 }) => {
   const [displayText, setDisplayText] = useState<string>(text);
@@ -26,6 +26,7 @@ export const TechText: React.FC<TechTextProps> = ({
           .split('')
           .map((char, index) => {
             if (char === ' ') return ' ';
+            if (char === '\n') return '\n';
             if (index < iteration / (maxIterations / text.length)) {
               return text[index];
             }
@@ -48,7 +49,7 @@ export const TechText: React.FC<TechTextProps> = ({
 
   return (
     <span
-      className={`inline-block font-bold tracking-tight transition-all duration-300 ${className} ${
+      className={`inline-block font-bold tracking-tight whitespace-pre-line transition-all duration-300 ${className} ${
         isDone ? 'opacity-100' : 'opacity-90'
       }`}
     >

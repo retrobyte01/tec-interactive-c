@@ -17,6 +17,7 @@ import type { CodingExercise } from '../../data/exercisesData';
 import { executeCCode } from '../../utils/cEngine';
 import type { ExecutionResult } from '../../utils/cEngine';
 import { useProgress } from '../../context/ProgressContext';
+import { Orb } from '../reactbits/Orb';
 
 interface CodeSandboxProps {
   initialCode?: string;
@@ -142,10 +143,13 @@ export const CodeSandbox: React.FC<CodeSandboxProps> = ({
     setWaitingForInput(false);
   };
 
-  const hasScanfInCode = code.includes('scanf') || code.includes('gets');
+
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 animate-in fade-in duration-300">
+    <div className="relative max-w-7xl mx-auto px-4 py-8 animate-in fade-in duration-300">
+      {/* Orb Background for Code Sandbox (https://reactbits.dev/c/backgrounds/orb) */}
+      <Orb hue={215} hoverIntensity={0.45} className="opacity-60 dark:opacity-40" />
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
@@ -159,8 +163,8 @@ export const CodeSandbox: React.FC<CodeSandboxProps> = ({
         </div>
 
         {/* Exercise selector pills */}
-        <div className="flex items-center space-x-2 overflow-x-auto pb-1">
-          {CODING_EXERCISES.map((ex) => {
+        <div className="flex items-center space-x-2 overflow-x-auto pb-1 max-w-full scrollbar-none">
+          {CODING_EXERCISES.map((ex, index) => {
             const isCurrent = ex.id === activeExercise.id;
             const exDone = progress.completedExerciseIds.includes(ex.id);
             return (
@@ -169,12 +173,13 @@ export const CodeSandbox: React.FC<CodeSandboxProps> = ({
                 onClick={() => handleSelectExercise(ex)}
                 className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
                   isCurrent
-                    ? 'bg-[#007AFF] text-white shadow-sm'
-                    : 'bg-black/[0.04] dark:bg-white/[0.06] text-[#777780] hover:text-[#171719]'
+                    ? 'bg-[#007AFF] text-white shadow-sm ring-2 ring-[#007AFF]/30'
+                    : 'bg-black/[0.04] dark:bg-white/[0.06] text-[#777780] hover:text-[#171719] dark:hover:text-white'
                 }`}
               >
                 {exDone && <Check className="w-3 h-3 text-[#34C759]" />}
-                <span>{ex.title.split(' ')[0]}</span>
+                <span className="font-mono text-[10px] opacity-70">Ex {index + 1}:</span>
+                <span>{ex.title}</span>
               </button>
             );
           })}
@@ -444,29 +449,38 @@ export const CodeSandbox: React.FC<CodeSandboxProps> = ({
 
                   {/* Test case validation banner */}
                   <div
-                    className={`mt-3 p-3 rounded-xl border flex items-center justify-between ${
+                    className={`mt-3 p-3 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${
                       passedAll
                         ? 'bg-[#34C759]/10 border-[#34C759]/30 text-[#34C759]'
                         : 'bg-[#FF9500]/10 border-[#FF9500]/30 text-[#FF9500]'
                     }`}
                   >
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-start sm:items-center space-x-2">
                       {passedAll ? (
-                        <CheckCircle2 className="w-4 h-4 shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 shrink-0 text-[#34C759] mt-0.5 sm:mt-0" />
                       ) : (
-                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <AlertCircle className="w-4 h-4 shrink-0 text-[#FF9500] mt-0.5 sm:mt-0" />
                       )}
-                      <span className="font-semibold text-xs">
-                        {passedAll
-                          ? 'Execution verified! All test outputs matched.'
-                          : hasScanfInCode
-                          ? 'Inputs processed successfully. Verify if computed output matches target.'
-                          : 'Output does not match expected result. Review instructions.'}
-                      </span>
+                      <div className="text-xs">
+                        <span className="font-semibold block sm:inline">
+                          {passedAll
+                            ? 'Execution verified! All test outputs matched.'
+                            : outputResult.exitCode === 0
+                            ? 'Program executed successfully (Exit Code 0).'
+                            : 'Compilation or Runtime error occurred.'}
+                        </span>
+                        {!passedAll && (
+                          <span className="text-[11px] opacity-80 block sm:inline sm:ml-2">
+                            {activeExercise.id === 'ex-01' && (code.includes('scanf') || code.includes('length'))
+                              ? 'Tip: You are on Ex 1 (Hello World). Switch to Ex 2 (User Input & Rectangle Area) above to verify this code!'
+                              : `Target output for this exercise: "${activeExercise.expectedOutput}"`}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     {passedAll && (
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#34C759]/20">
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#34C759]/20 self-start sm:self-auto">
                         +50 XP
                       </span>
                     )}
