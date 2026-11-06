@@ -1,8 +1,8 @@
 import React from 'react';
 import { ArrowRight, BookOpen, Sparkles } from 'lucide-react';
-import { SoftAurora } from '../reactbits/SoftAurora';
-import { CrystalizedBall } from '../reactbits/CrystalizedBall';
+import { Aurora } from '../reactbits/Aurora';
 import { TechText } from '../reactbits/TechText';
+import { useTheme } from '../../context/ThemeContext';
 
 interface HeroSectionProps {
   onStartLearning: () => void;
@@ -13,20 +13,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onStartLearning,
   onExploreCurriculum
 }) => {
+  const { theme } = useTheme();
+
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center pt-28 pb-16 px-4 overflow-hidden">
-      {/* Background Layer 1: Soft Aurora Atmosphere */}
-      <SoftAurora speed={0.4} opacity={0.65} />
-
-      {/* Background Layer 2: Interactive Crystalized Ball */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <CrystalizedBall
-          size={210}
-          particleCount={80}
-          electricIntensity={1.1}
-          className="w-full h-full max-w-2xl max-h-[600px] opacity-80 dark:opacity-75 transition-opacity"
+      {/* Official React Bits Aurora Background (https://reactbits.dev/c/backgrounds/aurora) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <Aurora
+          colorStops={
+            theme === 'dark'
+              ? ['#3A29FF', '#FF94B4', '#FF3232']
+              : ['#5227FF', '#007AFF', '#7cff67']
+          }
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.8}
+          lightMode={theme === 'light'}
+          className="w-full h-full opacity-80 dark:opacity-60"
         />
       </div>
+
+      {/* Seamless bottom fade mask */}
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#FAFAFC] dark:from-[#0E0E12] to-transparent pointer-events-none z-[1]" />
 
       <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
         {/* Pill Tag */}
@@ -58,15 +66,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </h1>
 
         {/* Supporting Description */}
-        <p className="text-base sm:text-lg md:text-xl text-[#777780] dark:text-[#9898A0] max-w-2xl font-normal leading-relaxed mb-8">
-          Your journey into programming starts here. Master C language through beautifully structured lessons, interactive examples, and hands-on challenges.
+        <p className="text-base sm:text-lg md:text-xl text-[#777780] dark:text-[#9898A0] max-w-2xl mb-10 leading-relaxed font-normal">
+          Your journey into programming starts here. Master the C language through
+          beautifully structured lessons, interactive memory models, and hands-on compiler challenges.
         </p>
 
-        {/* Call to Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-md mb-8">
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
           <button
             onClick={onStartLearning}
-            className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-[#007AFF] hover:bg-[#0062CC] text-white font-semibold text-sm px-7 py-3.5 rounded-full shadow-apple-md hover:shadow-apple-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+            className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-[#007AFF] hover:bg-[#0062CC] text-white font-semibold text-base px-8 py-3.5 rounded-full shadow-apple-md hover:shadow-apple-lg hover:scale-105 active:scale-95 transition-all duration-200"
           >
             <span>Start Learning</span>
             <ArrowRight className="w-4 h-4" />
@@ -74,18 +83,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           <button
             onClick={onExploreCurriculum}
-            className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-white/80 dark:bg-[#1C1C24]/80 hover:bg-white dark:hover:bg-[#2C2C34] text-[#171719] dark:text-[#F5F5F7] font-semibold text-sm px-7 py-3.5 rounded-full border border-black/[0.08] dark:border-white/[0.1] shadow-apple-sm transition-all duration-200"
+            className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-black/[0.04] dark:bg-white/[0.08] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] text-[#171719] dark:text-[#F5F5F7] font-semibold text-base px-8 py-3.5 rounded-full border border-black/[0.06] dark:border-white/[0.08] hover:scale-105 active:scale-95 transition-all duration-200"
           >
-            <BookOpen className="w-4 h-4 text-[#007AFF]" />
+            <BookOpen className="w-4 h-4" />
             <span>Explore Curriculum</span>
           </button>
         </div>
 
         {/* Trust / Value statement */}
-        <div className="flex items-center space-x-2 text-xs sm:text-sm text-[#777780] dark:text-[#9898A0] font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#34C759]" />
-          <span>From your first line of code to mastering memory and pointers.</span>
-        </div>
+        <p className="text-xs sm:text-sm text-[#777780] dark:text-[#9898A0] font-medium tracking-wide">
+          From your first line of code to mastering memory, pointers, and systems.
+        </p>
       </div>
     </section>
   );
