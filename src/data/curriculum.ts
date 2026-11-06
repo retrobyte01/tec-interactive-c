@@ -1,14 +1,27 @@
-import type { Challenge, CurriculumData, Lesson, Module } from '../types'
+import type { Challenge, CurriculumData } from '../types'
 
 const challenge = (
   id: string,
   type: Challenge['type'],
   prompt: string,
-  expected?: string,
-  options?: string[],
+  expectedOrOptions?: string | string[],
+  optionsOrExpected?: string | string[],
   explanation = '',
   pass = true
-): Challenge => ({ id, type, prompt, expected, options, explanation, pass })
+): Challenge => {
+  let expected: string | undefined
+  let options: string[] | undefined
+
+  if (Array.isArray(expectedOrOptions)) {
+    options = expectedOrOptions
+    expected = typeof optionsOrExpected === 'string' ? optionsOrExpected : undefined
+  } else {
+    expected = expectedOrOptions
+    options = Array.isArray(optionsOrExpected) ? optionsOrExpected : undefined
+  }
+
+  return { id, type, prompt, expected, options, explanation, pass }
+}
 
 export const curriculum: CurriculumData = {
   foundations: {
@@ -604,7 +617,7 @@ export const curriculum: CurriculumData = {
         title: 'Strings',
         description: 'A character array ending in \\0.',
         explanation:
-          'A C string is a one-dimensional character array terminated by a null character, '\\0'. Double quotes add the terminator automatically.',
+          "A C string is a one-dimensional character array terminated by a null character, '\\0'. Double quotes add the terminator automatically.",
         codeExample: {
           language: 'c',
           description: 'A string literal',
